@@ -22,6 +22,7 @@ import java.util.ArrayList;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
+
 public class QuestionsFragment extends Fragment {
 
     private List<Question> questionList;
@@ -37,6 +38,15 @@ public class QuestionsFragment extends Fragment {
      * fragment (e.g. upon screen orientation changes).
      */
     public QuestionsFragment() {
+    }
+
+    private int getNextInt() {
+        Question lastQuestion = questionList.get(questionList.size() - 1);
+
+        if (lastQuestion != null) {
+            return lastQuestion.getId() + 1;
+        }
+        return 1;
     }
 
     // TODO: Customize parameter initialization

@@ -3,18 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.NewQuestionFragment"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="16sp"
 
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".ui.NewQuestionFragment">
 
     <EditText
-        android:layout_margin="16sp"
+        android:id="@+id/question_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="16sp"
+        android:hint="@string/questionname"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:hint="@string/questionname"
+        android:imeOptions="actionNext"
+        android:nextFocusForward="@id/new_question_answer_1"
         />
 
     <!-- Horizontal block for answer 1 and 2 -->
@@ -22,31 +26,31 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <!-- Block radio + answer -->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_weight="1"
-            >
+            android:orientation="horizontal">
+
             <CheckBox
                 android:id="@+id/new_question_check_1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"
-                />
+                android:layout_weight="5" />
 
             <EditText
                 android:id="@+id/new_question_answer_1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:hint="@string/answer"
                 android:layout_weight="1"
+                android:hint="@string/answer"
+                android:inputType="text"
+                android:imeOptions="actionNext"
+                android:nextFocusForward="@id/new_question_answer_2"
 
                 />
         </LinearLayout>
@@ -56,24 +60,24 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_weight="1"
-            >
+            android:orientation="horizontal">
+
             <CheckBox
                 android:id="@+id/new_question_check_2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"
-                />
+                android:layout_weight="5" />
 
             <EditText
                 android:id="@+id/new_question_answer_2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
                 android:layout_weight="1"
                 android:hint="@string/answer"
-                />
+                android:inputType="text"
+                android:imeOptions="actionNext"
+                android:nextFocusForward="@id/new_question_answer_3" />
         </LinearLayout>
 
     </LinearLayout>
@@ -83,33 +87,32 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <!-- Block radio + answer -->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_weight="1"
-            >
+            android:orientation="horizontal">
+
             <CheckBox
                 android:id="@+id/new_question_check_3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"
-                />
+                android:layout_weight="5" />
 
             <EditText
                 android:id="@+id/new_question_answer_3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minWidth="100sp"
-                android:inputType="text"
-                android:hint="@string/answer"
                 android:layout_weight="1"
-                />
+                android:hint="@string/answer"
+                android:inputType="text"
+                android:minWidth="100sp"
+                android:imeOptions="actionNext"
+                android:nextFocusForward="@id/new_question_answer_4"/>
         </LinearLayout>
 
         <!-- Block radio + answer -->
@@ -117,27 +120,36 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_weight="1"
-            >
+            android:orientation="horizontal">
+
             <CheckBox
                 android:id="@+id/new_question_check_4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"
-                />
+                android:layout_weight="5" />
 
             <EditText
                 android:id="@+id/new_question_answer_4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minWidth="100sp"
-                android:inputType="text"
-                android:hint="@string/answer"
                 android:layout_weight="1"
-                />
+                android:hint="@string/answer"
+                android:inputType="text"
+                android:minWidth="100sp" />
         </LinearLayout>
 
     </LinearLayout>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:backgroundTint="@android:color/holo_purple"
+        app:borderWidth="0sp"
+        android:src="@drawable/ic_done_black"
+        android:layout_margin="16dp" />
 
 </LinearLayout>

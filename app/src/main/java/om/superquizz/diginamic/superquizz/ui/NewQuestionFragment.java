@@ -1,18 +1,26 @@
 package om.superquizz.diginamic.superquizz.ui;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import om.superquizz.diginamic.superquizz.R;
+import om.superquizz.diginamic.superquizz.model.Question;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +33,11 @@ import om.superquizz.diginamic.superquizz.R;
 public class NewQuestionFragment extends Fragment {
 
     private CheckBox[] checkboxes;
+    private TextView intitule;
+    private EditText answer1;
+    private EditText answer2;
+    private EditText answer3;
+    private EditText answer4;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -80,12 +93,10 @@ public class NewQuestionFragment extends Fragment {
 
         checkboxes = new CheckBox[4];
 
-        View v = getView();
-
-        checkboxes[0] = v.findViewById(R.id.new_question_check_1);
-        checkboxes[1] = v.findViewById(R.id.new_question_check_2);
-        checkboxes[2] = v.findViewById(R.id.new_question_check_3);
-        checkboxes[3] = v.findViewById(R.id.new_question_check_4);
+        checkboxes[0] = view.findViewById(R.id.new_question_check_1);
+        checkboxes[1] = view.findViewById(R.id.new_question_check_2);
+        checkboxes[2] = view.findViewById(R.id.new_question_check_3);
+        checkboxes[3] = view.findViewById(R.id.new_question_check_4);
 
         for (final CheckBox checkBox : checkboxes) {
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -98,6 +109,40 @@ public class NewQuestionFragment extends Fragment {
                 }
             });
         }
+
+        intitule = view.findViewById(R.id.question_name);
+        answer1 = view.findViewById(R.id.new_question_answer_1);
+        answer2 = view.findViewById(R.id.new_question_answer_2);
+        answer3 = view.findViewById(R.id.new_question_answer_3);
+        answer4 = view.findViewById(R.id.new_question_answer_4);
+
+        FloatingActionButton fab = view.findViewById(R.id.fab);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                // getting the good answer number
+
+                int i = 0;
+                while (i < 4) {
+                    if (checkboxes[i].isChecked()) {
+                        break;
+                    }
+                    i++;
+                }
+
+                String a = intitule.getText().toString();
+                String b = answer1.getText().toString();
+                String c = answer2.getText().toString();
+                String d = answer3.getText().toString();
+                String e = answer4.getText().toString();
+
+                Question q = new Question(0, intitule.getText().toString(),
+                        answer1.getText().toString(), answer2.getText().toString(),
+                        answer3.getText().toString(), answer4.getText().toString(), i);
+            }
+        });
     }
 
     /*// TODO: Rename method, update argument and hook method into UI event
