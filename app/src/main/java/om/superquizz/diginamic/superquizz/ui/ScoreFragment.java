@@ -10,42 +10,23 @@ import android.view.ViewGroup;
 
 import om.superquizz.diginamic.superquizz.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ScoreFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ScoreFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ScoreFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String SCORE = "score";
+    private static final String MAX_SCORE = "maxScore";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String score;
+    private String maxScore;
 
     public ScoreFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ScoreFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ScoreFragment newInstance(String param1, String param2) {
+    // Conservé pour référence (non utilisé pour ce fragment)
+    public static ScoreFragment newInstance(int param1, int param2) {
         ScoreFragment fragment = new ScoreFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putInt(SCORE, param1);
+        args.putInt(MAX_SCORE, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,8 +35,8 @@ public class ScoreFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            score = getArguments().getString(score);
+            maxScore = getArguments().getString(maxScore);
         }
     }
 

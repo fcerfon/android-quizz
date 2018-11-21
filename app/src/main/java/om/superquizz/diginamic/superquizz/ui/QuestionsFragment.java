@@ -10,8 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.List;
-
 import om.superquizz.diginamic.superquizz.R;
 import om.superquizz.diginamic.superquizz.dao.QuestionMemDao;
 import om.superquizz.diginamic.superquizz.model.Question;
@@ -27,9 +25,6 @@ public class QuestionsFragment extends Fragment {
 
     QuestionMemDao dao;
 
-    // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener listener;
 
@@ -38,15 +33,6 @@ public class QuestionsFragment extends Fragment {
      * fragment (e.g. upon screen orientation changes).
      */
     public QuestionsFragment() {
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
     }
 
     @Override
@@ -88,9 +74,8 @@ public class QuestionsFragment extends Fragment {
         listener = null;
     }
 
-    /*
-    ** Implémentation de l'interface pour communication avec activity "parente
-     */
+    // Implémentation de l'interface pour communication avec activity "parente
+
     public interface OnListFragmentInteractionListener {
         void onListFragmentInteraction(Question item);
     }

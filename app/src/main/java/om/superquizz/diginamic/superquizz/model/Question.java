@@ -26,7 +26,6 @@ public class Question implements Parcelable {
         this.goodAnswer = goodAnswer;
     }
 
-
     protected Question(Parcel in) {
         id = in.readInt();
         intitule = in.readString();
@@ -34,17 +33,7 @@ public class Question implements Parcelable {
         goodAnswer = in.readInt();
     }
 
-    public static final Creator<Question> CREATOR = new Creator<Question>() {
-        @Override
-        public Question createFromParcel(Parcel in) {
-            return new Question(in);
-        }
-
-        @Override
-        public Question[] newArray(int size) {
-            return new Question[size];
-        }
-    };
+    // Getters and setters
 
     public String getFirstAnswer() {return propositions[0];}
     public String getSecondAnswer() {return propositions[1];}
@@ -52,18 +41,17 @@ public class Question implements Parcelable {
     public String getFourthAnswer() {return propositions[3];}
     public int getGoodAnswer() {return goodAnswer;}
     public String getGoodAnswerToString() { return propositions[goodAnswer]; };
-
     public String getIntitule() {
         return intitule;
     }
-
     public String[] getPropositions() {
         return propositions;
     }
-
+    public void setId(int id) {this.id = id;}
     public void setBonneReponse(int indexQuestion) {
         this.goodAnswer = indexQuestion;
     }
+    public int getId() {return id;}
 
     /*public TypeQuestion getType() {
         return type;
@@ -73,7 +61,7 @@ public class Question implements Parcelable {
         this.type = type;
     }*/
 
-    public int getId() {return id;}
+    // Parcelable implementation
 
     @Override
     public int describeContents() {
@@ -87,4 +75,16 @@ public class Question implements Parcelable {
         dest.writeStringArray(propositions);
         dest.writeInt(goodAnswer);
     }
+
+    public static final Creator<Question> CREATOR = new Creator<Question>() {
+        @Override
+        public Question createFromParcel(Parcel in) {
+            return new Question(in);
+        }
+
+        @Override
+        public Question[] newArray(int size) {
+            return new Question[size];
+        }
+    };
 }

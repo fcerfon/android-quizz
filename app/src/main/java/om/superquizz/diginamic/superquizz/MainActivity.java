@@ -9,12 +9,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
-
-import java.util.ArrayList;
 
 import om.superquizz.diginamic.superquizz.dao.QuestionMemDao;
 import om.superquizz.diginamic.superquizz.model.Question;
@@ -78,17 +75,6 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        /*if (savedInstanceState == null) {
-
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-            PlayFragment fragment = new PlayFragment();
-            fragmentTransaction.add(R.id.fragment_container, fragment);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
-        }*/
-
         initializeListQuestions();
 
         // Launch default fragment
@@ -97,15 +83,7 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         QuestionsFragment fragment = new QuestionsFragment();
-
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("dao", dao);
-        fragment.setArguments(bundle);
-
-        fragmentTransaction.replace(R.id.fragment_container, fragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-
+        startQuestion(fragmentTransaction);
     }
 
     @Override
@@ -140,6 +118,19 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    private void startQuestion(FragmentTransaction fragmentTransaction) {
+
+        QuestionsFragment fragment = new QuestionsFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("dao", dao);
+        fragment.setArguments(bundle);
+
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -156,10 +147,7 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
         } else if (id == R.id.nav_play) {
 
-            PlayFragment fragment = new PlayFragment();
-            fragmentTransaction.replace(R.id.fragment_container, fragment);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
+            startQuestion(fragmentTransaction);
 
         } else if (id == R.id.nav_score) {
 
@@ -187,7 +175,7 @@ public class MainActivity extends AppCompatActivity
 
         }*/
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
