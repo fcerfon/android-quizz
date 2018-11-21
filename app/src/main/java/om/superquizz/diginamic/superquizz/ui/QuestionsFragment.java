@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import om.superquizz.diginamic.superquizz.R;
+import om.superquizz.diginamic.superquizz.dao.QuestionMemDao;
 import om.superquizz.diginamic.superquizz.model.Question;
-import java.util.ArrayList;
 
 /**
  * A fragment representing a list of Items.
@@ -25,38 +25,19 @@ import java.util.ArrayList;
 
 public class QuestionsFragment extends Fragment {
 
-    private List<Question> questionList;
+    QuestionMemDao dao;
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
-    private OnListFragmentInteractionListener mListener;
+    private OnListFragmentInteractionListener listener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
     public QuestionsFragment() {
-    }
-
-    private int getNextInt() {
-        Question lastQuestion = questionList.get(questionList.size() - 1);
-
-        if (lastQuestion != null) {
-            return lastQuestion.getId() + 1;
-        }
-        return 1;
-    }
-
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
-    public static QuestionsFragment newInstance(int columnCount) {
-        QuestionsFragment fragment = new QuestionsFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -66,28 +47,6 @@ public class QuestionsFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
-    }
-
-    private void initializeQuestionList() {
-
-        // Initialisation des questions par défaut
-
-        questionList = new ArrayList<>();
-        questionList.add(new Question(1,"Quelle est la capitale de la France",
-                "Londres", "Paris", "Bruxel",
-                "Strasbourg", 1));
-
-        questionList.add(new Question(2,"Quel type de chat est le plus moche ?",
-                "Chat de gouttière", "Chat siamois",
-                "Chat breton","Chat sans poil", 3));
-
-        questionList.add(new Question(3,"Ils ont des chapeaux ronds vive ...",
-                "les bretons", "la pluie", "les parigos",
-                "les nantais", 0));
-
-        questionList.add(new Question(4,"Le délicieux gateau au beurre s'écrit ...",
-                "Kouign amant", "Kouignaman", "Kouign amann",
-                "Kouignamant", 2));
     }
 
     @Override
@@ -105,8 +64,8 @@ public class QuestionsFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            initializeQuestionList();
-            recyclerView.setAdapter(new MyQuestionsFragmentRecyclerViewAdapter(questionList, mListener));
+            dao = getArguments().getParcelable("dao");
+            recyclerView.setAdapter(new MyQuestionsFragmentRecyclerViewAdapter(dao.findAll(), listener));
         }
         return view;
     }
@@ -116,7 +75,7 @@ public class QuestionsFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+            listener = (OnListFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
@@ -126,21 +85,13 @@ public class QuestionsFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        listener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
+    /*
+    ** Implémentation de l'interface pour communication avec activity "parente
      */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onListFragmentInteraction(Question item);
     }
 }

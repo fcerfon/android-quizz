@@ -9,10 +9,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
 
+import java.util.ArrayList;
+
+import om.superquizz.diginamic.superquizz.dao.QuestionMemDao;
 import om.superquizz.diginamic.superquizz.model.Question;
 import om.superquizz.diginamic.superquizz.ui.NewQuestionFragment;
 import om.superquizz.diginamic.superquizz.ui.PlayFragment;
@@ -21,7 +25,13 @@ import om.superquizz.diginamic.superquizz.ui.ScoreFragment;
 import om.superquizz.diginamic.superquizz.ui.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, QuestionsFragment.OnListFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, QuestionsFragment.OnListFragmentInteractionListener, NewQuestionFragment.OnCreateQuestionListener
+ {
+     QuestionMemDao dao;
+
+     public void onQuestionCreated(Question q) {
+         dao.save(q);
+     }
 
     public void onListFragmentInteraction(Question item) {
         Intent i = new Intent(MainActivity.this,QuestionActivity.class);
@@ -31,7 +41,25 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initializeListQuestions() {
+        // Initialisation des questions par défaut
 
+        dao = new QuestionMemDao();
+
+        dao.save(new Question(1,"Quelle est la capitale de la France",
+                "Londres", "Paris", "Bruxel",
+                "Strasbourg", 1));
+
+        dao.save(new Question(2,"Quel type de chat est le plus moche ?",
+                "Chat de gouttière", "Chat siamois",
+                "Chat breton","Chat sans poil", 3));
+
+        dao.save(new Question(3,"Ils ont des chapeaux ronds vive ...",
+                "les bretons", "la pluie", "les parigos",
+                "les nantais", 0));
+
+        dao.save(new Question(4,"Le délicieux gateau au beurre s'écrit ...",
+                "Kouign amant", "Kouignaman", "Kouign amann",
+                "Kouignamant", 2));
     }
 
     @Override
@@ -61,10 +89,19 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.commit();
         }*/
 
+        initializeListQuestions();
+
+        // Launch default fragment
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         QuestionsFragment fragment = new QuestionsFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("dao", dao);
+        fragment.setArguments(bundle);
+
         fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();

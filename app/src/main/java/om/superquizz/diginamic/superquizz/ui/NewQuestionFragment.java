@@ -25,13 +25,14 @@ import om.superquizz.diginamic.superquizz.model.Question;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link NewQuestionFragment.OnFragmentInteractionListener} interface
+ * {@link NewQuestionFragment.OnCreateQuestionListener} interface
  * to handle interaction events.
  * Use the {@link NewQuestionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class NewQuestionFragment extends Fragment {
 
+    private NewQuestionFragment.OnCreateQuestionListener mListener;
     private CheckBox[] checkboxes;
     private TextView intitule;
     private EditText answer1;
@@ -141,34 +142,29 @@ public class NewQuestionFragment extends Fragment {
                 Question q = new Question(0, intitule.getText().toString(),
                         answer1.getText().toString(), answer2.getText().toString(),
                         answer3.getText().toString(), answer4.getText().toString(), i);
+
+                mListener.onQuestionCreated(q);
             }
         });
     }
 
-    /*// TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }*/
-
-    /*@Override
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        /*if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnCreateQuestionListener) {
+            mListener = (OnCreateQuestionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-    }*/
-/*
+    }
+
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }*/
+    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -180,8 +176,8 @@ public class NewQuestionFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    /*public interface OnFragmentInteractionListener {
+    public interface OnCreateQuestionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }*/
+        void onQuestionCreated(Question q);
+    }
 }
