@@ -12,16 +12,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/failure"
-        android:contentDescription="success"
+        android:contentDescription="@string/failure_image_desc"
         android:layout_gravity="center_horizontal"
         />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sorry ! That was the wrong answer :-("
+        android:text="@string/wrong_answer"
         android:fontFamily="cursive"
-        android:textSize="32dp"
+        android:textSize="32sp"
         android:layout_gravity="center_horizontal"
         android:textStyle="bold"
         />

@@ -1,11 +1,8 @@
 package om.superquizz.diginamic.superquizz;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -14,15 +11,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.content.Intent;
 
+import om.superquizz.diginamic.superquizz.model.Question;
+import om.superquizz.diginamic.superquizz.ui.PlayFragment;
 import om.superquizz.diginamic.superquizz.ui.QuestionsFragment;
 import om.superquizz.diginamic.superquizz.ui.ScoreFragment;
 import om.superquizz.diginamic.superquizz.ui.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, QuestionsFragment.OnListFragmentInteractionListener {
+
+    public void onListFragmentInteraction(Question item) {
+        Intent i = new Intent(MainActivity.this,QuestionActivity.class);
+
+        i.putExtra("question",item);
+        startActivity(i);
+    }
+
+    private void initializeListQuestions() {
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +48,26 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        /*if (savedInstanceState == null) {
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+            PlayFragment fragment = new PlayFragment();
+            fragmentTransaction.add(R.id.fragment_container, fragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        }*/
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        QuestionsFragment fragment = new QuestionsFragment();
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
     }
 
     @Override
@@ -87,14 +116,14 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
 
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_play) {
 
-            QuestionsFragment fragment = new QuestionsFragment();
+            PlayFragment fragment = new PlayFragment();
             fragmentTransaction.replace(R.id.fragment_container, fragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_score) {
 
             ScoreFragment fragment = new ScoreFragment();
             fragmentTransaction.replace(R.id.fragment_container, fragment);

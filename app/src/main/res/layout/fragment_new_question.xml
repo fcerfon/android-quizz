@@ -3,14 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/questionsLayout"
-    tools:context=".ui.PlayFragment">
+    tools:context=".ui.NewQuestion">
 
-    <Button
-        android:id="@+id/playButton"
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Play !"
-        android:layout_centerHorizontal="true"/>
+        android:layout_height="match_parent"
+        android:text="@string/hello_blank_fragment" />
 
 </FrameLayout>

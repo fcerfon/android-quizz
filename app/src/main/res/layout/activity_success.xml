@@ -18,9 +18,9 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Congrats ! You got the right answer !"
+        android:text="@string/good_answer"
         android:fontFamily="cursive"
-        android:textSize="32dp"
+        android:textSize="32sp"
         android:layout_gravity="center_horizontal"
         android:textStyle="bold"
         />

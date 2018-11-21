@@ -13,8 +13,8 @@
         android:layout_marginTop="15dp"
         android:layout_marginBottom="25dp"
         android:fontFamily="cursive"
-        android:text="Florent Cerfon"
-        android:textSize="42dp"
+        android:text="@string/author_name"
+        android:textSize="42sp"
         android:layout_gravity="center_horizontal"
         android:textStyle="bold"
         />
