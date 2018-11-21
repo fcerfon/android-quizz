@@ -16,7 +16,6 @@ import android.content.Intent;
 import om.superquizz.diginamic.superquizz.dao.QuestionMemDao;
 import om.superquizz.diginamic.superquizz.model.Question;
 import om.superquizz.diginamic.superquizz.ui.NewQuestionFragment;
-import om.superquizz.diginamic.superquizz.ui.PlayFragment;
 import om.superquizz.diginamic.superquizz.ui.QuestionsFragment;
 import om.superquizz.diginamic.superquizz.ui.ScoreFragment;
 import om.superquizz.diginamic.superquizz.ui.SettingsFragment;
@@ -167,13 +166,6 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         }
-
-
-        /*else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }*/
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
