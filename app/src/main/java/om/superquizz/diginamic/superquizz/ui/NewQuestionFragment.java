@@ -3,22 +3,29 @@ package om.superquizz.diginamic.superquizz.ui;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import om.superquizz.diginamic.superquizz.R;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link NewQuestion.OnFragmentInteractionListener} interface
+ * {@link NewQuestionFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link NewQuestion#newInstance} factory method to
+ * Use the {@link NewQuestionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewQuestion extends Fragment {
+public class NewQuestionFragment extends Fragment {
+
+    private CheckBox[] checkboxes;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -28,9 +35,9 @@ public class NewQuestion extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    // private OnFragmentInteractionListener mListener;
 
-    public NewQuestion() {
+    public NewQuestionFragment() {
         // Required empty public constructor
     }
 
@@ -40,11 +47,10 @@ public class NewQuestion extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment NewQuestion.
+     * @return A new instance of fragment NewQuestionFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static NewQuestion newInstance(String param1, String param2) {
-        NewQuestion fragment = new NewQuestion();
+    public static NewQuestionFragment newInstance(String param1, String param2) {
+        NewQuestionFragment fragment = new NewQuestionFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -55,10 +61,10 @@ public class NewQuestion extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
+        /*if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        }*/
     }
 
     @Override
@@ -68,29 +74,56 @@ public class NewQuestion extends Fragment {
         return inflater.inflate(R.layout.fragment_new_question, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        checkboxes = new CheckBox[4];
+
+        View v = getView();
+
+        checkboxes[0] = v.findViewById(R.id.new_question_check_1);
+        checkboxes[1] = v.findViewById(R.id.new_question_check_2);
+        checkboxes[2] = v.findViewById(R.id.new_question_check_3);
+        checkboxes[3] = v.findViewById(R.id.new_question_check_4);
+
+        for (final CheckBox checkBox : checkboxes) {
+            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    for (CheckBox singleCheckbox : checkboxes) {
+                        singleCheckbox.setChecked(false);
+                    }
+                    buttonView.setChecked(isChecked);
+                }
+            });
+        }
+    }
+
+    /*// TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
-    }
+    }*/
 
-    @Override
+    /*@Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
+
+        /*if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-    }
-
+    }*/
+/*
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
+    }*/
 
     /**
      * This interface must be implemented by activities that contain this
@@ -102,8 +135,8 @@ public class NewQuestion extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    /*public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
+    }*/
 }

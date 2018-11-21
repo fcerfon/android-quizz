@@ -1,14 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.NewQuestion">
+    tools:context=".ui.NewQuestionFragment"
+    android:layout_margin="16sp"
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    android:orientation="vertical">
+
+    <EditText
+        android:layout_margin="16sp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:hint="@string/questionname"
+        />
 
-</FrameLayout>
+    <!-- Horizontal block for answer 1 and 2 -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <!-- Block radio + answer -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            >
+            <CheckBox
+                android:id="@+id/new_question_check_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                />
+
+            <EditText
+                android:id="@+id/new_question_answer_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="@string/answer"
+                android:layout_weight="1"
+
+                />
+        </LinearLayout>
+
+        <!-- Block radio + answer -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            >
+            <CheckBox
+                android:id="@+id/new_question_check_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                />
+
+            <EditText
+                android:id="@+id/new_question_answer_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:layout_weight="1"
+                android:hint="@string/answer"
+                />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Horizontal block for answer 3 and 4 -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <!-- Block radio + answer -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            >
+            <CheckBox
+                android:id="@+id/new_question_check_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                />
+
+            <EditText
+                android:id="@+id/new_question_answer_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minWidth="100sp"
+                android:inputType="text"
+                android:hint="@string/answer"
+                android:layout_weight="1"
+                />
+        </LinearLayout>
+
+        <!-- Block radio + answer -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            >
+            <CheckBox
+                android:id="@+id/new_question_check_4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                />
+
+            <EditText
+                android:id="@+id/new_question_answer_4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minWidth="100sp"
+                android:inputType="text"
+                android:hint="@string/answer"
+                android:layout_weight="1"
+                />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

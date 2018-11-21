@@ -15,6 +15,10 @@
             android:icon="@drawable/ic_score"
             android:title="Score" />
         <item
+            android:id="@+id/new_question"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="New question" />
+        <item
             android:id="@+id/nav_info"
             android:icon="@drawable/ic_book"
             android:title="Infos" />

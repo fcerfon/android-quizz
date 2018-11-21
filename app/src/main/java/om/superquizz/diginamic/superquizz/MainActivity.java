@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.content.Intent;
 
 import om.superquizz.diginamic.superquizz.model.Question;
+import om.superquizz.diginamic.superquizz.ui.NewQuestionFragment;
 import om.superquizz.diginamic.superquizz.ui.PlayFragment;
 import om.superquizz.diginamic.superquizz.ui.QuestionsFragment;
 import om.superquizz.diginamic.superquizz.ui.ScoreFragment;
@@ -135,7 +136,15 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.replace(R.id.fragment_container, fragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
-        } /*else if (id == R.id.nav_share) {
+        } else if (id == R.id.new_question) {
+            NewQuestionFragment fragment = new NewQuestionFragment();
+            fragmentTransaction.replace(R.id.fragment_container, fragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        }
+
+
+        /*else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
 
