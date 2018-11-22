@@ -1,6 +1,7 @@
 package om.superquizz.diginamic.superquizz.ui;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,6 @@ import om.superquizz.diginamic.superquizz.model.Question;
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Question} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
  */
 public class MyQuestionsFragmentRecyclerViewAdapter extends RecyclerView.Adapter<MyQuestionsFragmentRecyclerViewAdapter.ViewHolder> {
 
@@ -44,10 +44,20 @@ public class MyQuestionsFragmentRecyclerViewAdapter extends RecyclerView.Adapter
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    mListener.onListQuestionClick(holder.mItem);
                 }
+            }
+        });
+
+        holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View v) {
+
+                if (mListener != null) {
+                    mListener.onListQuestionLongClick(holder.mItem);
+                }
+                return true;
             }
         });
     }

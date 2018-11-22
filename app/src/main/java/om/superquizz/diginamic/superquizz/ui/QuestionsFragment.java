@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import om.superquizz.diginamic.superquizz.R;
 import om.superquizz.diginamic.superquizz.dao.QuestionMemDao;
+import om.superquizz.diginamic.superquizz.database.QuestionDatabase;
 import om.superquizz.diginamic.superquizz.model.Question;
 
 /**
@@ -50,8 +51,7 @@ public class QuestionsFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            dao = getArguments().getParcelable("dao");
-            recyclerView.setAdapter(new MyQuestionsFragmentRecyclerViewAdapter(dao.findAll(), listener));
+            recyclerView.setAdapter(new MyQuestionsFragmentRecyclerViewAdapter(QuestionDatabase.getInstance(getActivity()).getAllQuestions(), listener));
         }
         return view;
     }
@@ -77,6 +77,7 @@ public class QuestionsFragment extends Fragment {
     // Implémentation de l'interface pour communication avec activity "parente
 
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(Question item);
+        void onListQuestionClick(Question item);
+        void onListQuestionLongClick(Question item);
     }
 }

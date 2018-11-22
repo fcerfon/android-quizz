@@ -1,5 +1,7 @@
 package om.superquizz.diginamic.superquizz;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -7,13 +9,17 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
 
+import java.util.List;
+
 import om.superquizz.diginamic.superquizz.dao.QuestionMemDao;
+import om.superquizz.diginamic.superquizz.database.QuestionDatabase;
 import om.superquizz.diginamic.superquizz.model.Question;
 import om.superquizz.diginamic.superquizz.ui.NewQuestionFragment;
 import om.superquizz.diginamic.superquizz.ui.QuestionsFragment;
@@ -24,39 +30,55 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, QuestionsFragment.OnListFragmentInteractionListener, NewQuestionFragment.OnCreateQuestionListener
  {
      QuestionMemDao dao;
+     Question toDeleteItem;
+     final Context context = this;
 
      public void onQuestionCreated(Question q) {
+         QuestionDatabase.getInstance(this).addQuestion(q);
          dao.save(q);
      }
 
-    public void onListFragmentInteraction(Question item) {
+    public void onListQuestionClick(Question item) {
         Intent i = new Intent(MainActivity.this,QuestionActivity.class);
 
         i.putExtra("question",item);
         startActivity(i);
     }
 
-    private void initializeListQuestions() {
+     public void onListQuestionLongClick(Question item) {
+
+         toDeleteItem = item;
+
+         AlertDialog.Builder builder;
+
+         builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+         builder.setTitle("Supprimer la question")
+                 .setMessage("Êtes-vous sûr ?")
+                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                     @Override
+                     public void onClick(DialogInterface dialog, int which) {
+                         dao.delete(toDeleteItem);
+                         QuestionDatabase.getInstance(context).deleteQuestion(toDeleteItem);
+                         FragmentManager fragmentManager = getSupportFragmentManager();
+                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                         startQuestion(fragmentTransaction);
+                     }
+                 });
+
+         builder.show();
+     }
+
+     private void initializeListQuestions() {
         // Initialisation des questions par défaut
 
-        dao = new QuestionMemDao();
+         List<Question> questions = QuestionDatabase.getInstance(this).getAllQuestions();
 
-        dao.save(new Question(1,"Quelle est la capitale de la France",
-                "Londres", "Paris", "Bruxel",
-                "Strasbourg", 1));
+         dao = new QuestionMemDao();
 
-        dao.save(new Question(2,"Quel type de chat est le plus moche ?",
-                "Chat de gouttière", "Chat siamois",
-                "Chat breton","Chat sans poil", 3));
-
-        dao.save(new Question(3,"Ils ont des chapeaux ronds vive ...",
-                "les bretons", "la pluie", "les parigos",
-                "les nantais", 0));
-
-        dao.save(new Question(4,"Le délicieux gateau au beurre s'écrit ...",
-                "Kouign amant", "Kouignaman", "Kouign amann",
-                "Kouignamant", 2));
-    }
+         for (Question quest : questions) {
+             dao.save(quest);
+         }
+     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +103,6 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        QuestionsFragment fragment = new QuestionsFragment();
         startQuestion(fragmentTransaction);
     }
 

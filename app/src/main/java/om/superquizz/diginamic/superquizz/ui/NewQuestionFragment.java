@@ -18,6 +18,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import om.superquizz.diginamic.superquizz.R;
 import om.superquizz.diginamic.superquizz.model.Question;
@@ -133,17 +134,26 @@ public class NewQuestionFragment extends Fragment {
                     i++;
                 }
 
-                String a = intitule.getText().toString();
-                String b = answer1.getText().toString();
-                String c = answer2.getText().toString();
-                String d = answer3.getText().toString();
-                String e = answer4.getText().toString();
+                if (answer1.getText().toString().equals("") || answer2.getText().toString().equals("")
+                        || answer3.getText().toString().equals("") || answer4.getText().toString().equals("")) {
+                    Toast.makeText(getActivity(), "Please put 4 propositions.",
+                            Toast.LENGTH_LONG).show();
+                }
+                else if (i == 4) {
+                    Toast.makeText(getActivity(), "Please select a good answer.",
+                            Toast.LENGTH_LONG).show();
+                }
+                else if (intitule.getText().toString().equals("")) {
+                    Toast.makeText(getActivity(), "Please put a question title.",
+                            Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Question q = new Question(0, intitule.getText().toString(),
+                            answer1.getText().toString(), answer2.getText().toString(),
+                            answer3.getText().toString(), answer4.getText().toString(), i);
 
-                Question q = new Question(0, intitule.getText().toString(),
-                        answer1.getText().toString(), answer2.getText().toString(),
-                        answer3.getText().toString(), answer4.getText().toString(), i);
-
-                mListener.onQuestionCreated(q);
+                    mListener.onQuestionCreated(q);
+                }
             }
         });
     }
