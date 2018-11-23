@@ -95,7 +95,7 @@ public class QuestionActivity extends AppCompatActivity implements DelayTask.pro
         }
 
         pb = findViewById(R.id.progressBar);
-        DelayTask task = new DelayTask(this);
+        DelayTask task = new DelayTask(this, 60);
         task.execute();
     }
 

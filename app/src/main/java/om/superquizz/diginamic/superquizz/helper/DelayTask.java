@@ -8,18 +8,23 @@ import om.superquizz.diginamic.superquizz.QuestionActivity;
 public class DelayTask extends AsyncTask<Void, Integer, String> {
     private final progressCallbackInterface listener;
 
-    public DelayTask(QuestionActivity context) {
+    int timerInSec;
+
+    public DelayTask(QuestionActivity context, int timer) {
         super();
+        timerInSec = timer;
         listener = context;
     }
 
     @Override
     protected String doInBackground(Void... params) {
+
         int count = 0;
-        while (count < 15) {
+
+        while (count < timerInSec) {
             SystemClock.sleep(1000);
             count++;
-            publishProgress(count * 7);
+            publishProgress((int)(count * (100 / timerInSec)));
         }
         publishProgress(100);
         listener.onTaskCompleted();
