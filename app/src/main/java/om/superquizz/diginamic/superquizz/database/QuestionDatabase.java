@@ -7,9 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import om.superquizz.diginamic.superquizz.api.APIClient;
 import om.superquizz.diginamic.superquizz.model.Question;
 
 public class QuestionDatabase extends SQLiteOpenHelper {

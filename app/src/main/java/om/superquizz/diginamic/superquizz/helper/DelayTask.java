@@ -8,7 +8,7 @@ import om.superquizz.diginamic.superquizz.QuestionActivity;
 public class DelayTask extends AsyncTask<Void, Integer, String> {
     private final progressCallbackInterface listener;
 
-    int timerInSec;
+    private int timerInSec;
 
     public DelayTask(QuestionActivity context, int timer) {
         super();

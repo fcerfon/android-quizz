@@ -16,18 +16,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
 
+import java.io.IOException;
 import java.util.List;
 
+import om.superquizz.diginamic.superquizz.api.APIClient;
 import om.superquizz.diginamic.superquizz.dao.QuestionMemDao;
 import om.superquizz.diginamic.superquizz.database.QuestionDatabase;
 import om.superquizz.diginamic.superquizz.model.Question;
+import om.superquizz.diginamic.superquizz.services.UpdateQuestionsIntentService;
 import om.superquizz.diginamic.superquizz.ui.NewQuestionFragment;
 import om.superquizz.diginamic.superquizz.ui.QuestionsFragment;
 import om.superquizz.diginamic.superquizz.ui.ScoreFragment;
 import om.superquizz.diginamic.superquizz.ui.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, QuestionsFragment.OnListFragmentInteractionListener, NewQuestionFragment.OnCreateQuestionListener
+        implements NavigationView.OnNavigationItemSelectedListener, QuestionsFragment.OnListFragmentInteractionListener, NewQuestionFragment.OnCreateQuestionListener, APIClient.APIResult<List<Question>>
  {
      QuestionMemDao dao;
      Question onLongClickItem;
@@ -111,7 +114,24 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         startQuestion(fragmentTransaction);
+
+        APIClient cl = APIClient.getInstance();
+        cl.getQuestions(this);
+
+        Intent uqServiceIntent = new Intent(this, UpdateQuestionsIntentService.class);
+        startService(uqServiceIntent);
+
     }
+
+     @Override
+     public void onFailure(IOException e) {
+
+     }
+
+     @Override
+     public void onSuccess(List<Question> object) throws IOException {
+
+     }
 
     @Override
     public void onBackPressed() {
@@ -149,6 +169,7 @@ public class MainActivity extends AppCompatActivity
 
         QuestionsFragment fragment = new QuestionsFragment();
 
+        // todo delete ?
         Bundle bundle = new Bundle();
         bundle.putParcelable("dao", dao);
         fragment.setArguments(bundle);
@@ -211,4 +232,4 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-}
+ }
