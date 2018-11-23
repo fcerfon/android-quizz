@@ -21,8 +21,6 @@ public class QuestionMemDao implements QuestionDao, Parcelable {
         return questions;
     }
     public void save(Question question) {
-        int size = questions.size();
-        //question.setId(size + 1);
         questions.add(question);
     }
     public void delete(Question question) {

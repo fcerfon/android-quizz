@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, QuestionsFragment.OnListFragmentInteractionListener, NewQuestionFragment.OnCreateQuestionListener
  {
      QuestionMemDao dao;
-     Question toDeleteItem;
+     Question onLongClickItem;
      final Context context = this;
 
      public void onQuestionCreated(Question q) {
@@ -47,21 +47,28 @@ public class MainActivity extends AppCompatActivity
 
      public void onListQuestionLongClick(Question item) {
 
-         toDeleteItem = item;
+         onLongClickItem = item;
 
          AlertDialog.Builder builder;
 
          builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-         builder.setTitle("Supprimer la question")
-                 .setMessage("Êtes-vous sûr ?")
-                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+         builder.setTitle("Supprimer ou éditer la question")
+                 .setPositiveButton("Supprimer", new DialogInterface.OnClickListener() {
                      @Override
                      public void onClick(DialogInterface dialog, int which) {
-                         dao.delete(toDeleteItem);
-                         QuestionDatabase.getInstance(context).deleteQuestion(toDeleteItem);
+                         dao.delete(onLongClickItem);
+                         QuestionDatabase.getInstance(context).deleteQuestion(onLongClickItem);
                          FragmentManager fragmentManager = getSupportFragmentManager();
                          FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                          startQuestion(fragmentTransaction);
+                     }
+                 })
+                 .setPositiveButton("Editer", new DialogInterface.OnClickListener() {
+                     @Override
+                     public void onClick(DialogInterface dialog, int which) {
+                         FragmentManager fragmentManager = getSupportFragmentManager();
+                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                         newOrEditQuestion(fragmentTransaction, onLongClickItem);
                      }
                  });
 
@@ -151,7 +158,20 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.commit();
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    public void newOrEditQuestion(FragmentTransaction fragmentTransaction, Question item) {
+        NewQuestionFragment fragment = new NewQuestionFragment();
+
+        if (item != null) {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("question", item);
+            fragment.setArguments(bundle);
+        }
+
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -182,10 +202,9 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         } else if (id == R.id.new_question) {
-            NewQuestionFragment fragment = new NewQuestionFragment();
-            fragmentTransaction.replace(R.id.fragment_container, fragment);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
+
+            newOrEditQuestion(fragmentTransaction, null);
+
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

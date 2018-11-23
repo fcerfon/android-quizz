@@ -1,7 +1,9 @@
 package om.superquizz.diginamic.superquizz.ui;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import om.superquizz.diginamic.superquizz.R;
 import om.superquizz.diginamic.superquizz.dao.QuestionMemDao;

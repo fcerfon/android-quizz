@@ -37,6 +37,10 @@ public class QuestionDatabase extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    private void sendRequest() {
+
+    }
+
     // todo : comprendre le context (domaine de l'application, genre une interface)
     public static synchronized QuestionDatabase getInstance(Context context) {
         if (dbInstance == null) {

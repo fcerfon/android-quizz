@@ -1,5 +1,7 @@
 package om.superquizz.diginamic.superquizz;
 
+import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -14,14 +16,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import android.content.Intent;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import om.superquizz.diginamic.superquizz.helper.DelayTask;
 import om.superquizz.diginamic.superquizz.model.Question;
 
-public class QuestionActivity extends AppCompatActivity {
+public class QuestionActivity extends AppCompatActivity implements DelayTask.progressCallbackInterface {
 
     private Button goodAnswer;
     private Button[] falseAnswers;
+    private ProgressBar pb;
 
     private void initialize() {
 
@@ -88,5 +93,25 @@ public class QuestionActivity extends AppCompatActivity {
                 }
             });
         }
+
+        pb = findViewById(R.id.progressBar);
+        DelayTask task = new DelayTask(this);
+        task.execute();
+    }
+
+    @Override
+    public void onTaskStarted() {
+        pb.setVisibility(ProgressBar.VISIBLE);
+    }
+
+    @Override
+    public void onTaskProgress(int progressValue) {
+        pb.setProgress(progressValue);
+    }
+
+    @Override
+    public void onTaskCompleted() {
+        Intent intent = new Intent(this, FailureActivity.class);
+        startActivity(intent);
     }
 }
