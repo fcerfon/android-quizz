@@ -2,12 +2,17 @@ package om.superquizz.diginamic.superquizz.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.os.SystemClock;
 import android.util.Log;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +36,9 @@ public class QuestionDatabase extends SQLiteOpenHelper {
 
     private static final String DROP_TABLE_QUERY = "DROP TABLE IF EXISTS ";
 
+    // update variables
     static private QuestionDatabase dbInstance;
+    private List<Question> localQuestions;
 
     // Singleton Pattern functions
 
@@ -40,6 +47,10 @@ public class QuestionDatabase extends SQLiteOpenHelper {
     }
 
     private void sendRequest() {
+
+    }
+
+    public void updateQuestion() {
 
     }
 
@@ -148,11 +159,65 @@ public class QuestionDatabase extends SQLiteOpenHelper {
             db.setTransactionSuccessful();
 
         } catch (Exception e) {
-            Log.e("DATABASE_ERROR", "Error while trying to add a question");
+            Log.e("DATABASE_ERROR", e.getMessage());
         } finally {
             db.endTransaction();
         }
 
         return questionId;
     }
+
+
+    private Question getQuestionById(List<Question> questions, int id) {
+        for (Question q : questions) {
+            if (q.getId() == id) {
+                return q;
+            }
+        }
+        return null;
+    }
+
+    void addQuestionToDb(Question q) {
+        dbInstance.addQuestion(q);
+    }
+
+    void updateQuestionIfNeeded(Question serverQuestion, Question localQuestion) {
+        if (!serverQuestion.getIntitule().equals(localQuestion.getIntitule()) ||
+                !serverQuestion.getFirstAnswer().equals(localQuestion.getFirstAnswer()) ||
+                !serverQuestion.getSecondAnswer().equals(localQuestion.getSecondAnswer()) ||
+                !serverQuestion.getThirdAnswer().equals(localQuestion.getThirdAnswer()) ||
+                !serverQuestion.getFourthAnswer().equals(localQuestion.getFourthAnswer()) ||
+                serverQuestion.getGoodAnswer() != (localQuestion.getGoodAnswer()))
+        {
+            dbInstance.deleteQuestion(localQuestion);
+            dbInstance.addQuestion(localQuestion);
+        }
+    }
+
+    void deleteQuestionInDb(Question q) {
+        dbInstance.deleteQuestion(q);
+    }
+
+
+    public void synchroniseDatabaseWithServerItems(List<Question> serverQuestions) throws IOException {
+        localQuestions = dbInstance.getAllQuestions();
+
+        for (Question q : localQuestions) {
+            Question serverQuestion = getQuestionById(serverQuestions, q.getId());
+            if (serverQuestion == null) {
+                deleteQuestionInDb(q);
+            }
+            else {
+                updateQuestionIfNeeded(serverQuestion, q);
+            }
+        }
+        for (Question q : serverQuestions) {
+            Question localQuestion = getQuestionById(localQuestions, q.getId());
+            if (localQuestion == null) {
+                addQuestionToDb(q);
+            }
+        }
+    }
+
+
 }

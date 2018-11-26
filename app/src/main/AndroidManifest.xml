@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="om.superquizz.diginamic.superquizz">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,7 +12,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <service android:name=".services.UpdateQuestionsIntentService" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -21,6 +23,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <receiver android:name=".helper.NetworkChangeReceiver" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.STATE_CHANGE" />
+            </intent-filter>
+        </receiver>
         <activity
             android:name=".QuestionActivity"
             android:screenOrientation="portrait" />
@@ -32,7 +40,4 @@
             android:screenOrientation="portrait" />
         <activity android:name=".InfoActivity"></activity>
     </application>
-
-    <uses-permission android:name="android.permission.INTERNET"/>
-
 </manifest>

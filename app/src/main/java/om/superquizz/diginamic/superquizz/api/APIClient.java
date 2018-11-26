@@ -7,22 +7,41 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import om.superquizz.diginamic.superquizz.model.Question;
 
 public class APIClient {
 
-    static final String API_URL = "http://192.168.10.38";
+    // API connectivity
+
+    static final String API_LOCAL_URL = "http://192.168.10.189";
+    static final String API_SERVER_URL = "http://192.168.10.38";
+    static final String API_URL = API_LOCAL_URL;
     static final String API_PORT = "3000";
     static final String GET_QUEST_URI = "/questions";
+    static final String POST_URI = "/questions";
     OkHttpClient client = new OkHttpClient();
+
+    // POST values
+
+    static final String AUTHOR_IMG_URL = "https://img.sheetmusic.direct/catalogue/contributor/e557d666-3595-4d82-8830-9cef343ab3a6/large.jpg";
+    static final String AUTHOR_NAME = "Florent";
+
+    // Singleton
 
     private static APIClient sInstance;
 
@@ -33,7 +52,77 @@ public class APIClient {
         return sInstance;
     }
 
-    public void getQuestions(final APIResult<List<Question>> result) {
+
+    private String getValueIfExists(JSONObject jsonQuestion, String key) {
+        try {
+            if (jsonQuestion.has(key)) {
+                return jsonQuestion.getString(key);
+            }
+        } catch (JSONException e) {
+            Log.e("error", e.getMessage());
+        }
+        return "";
+    }
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    public static final MediaType URLENCODED = MediaType.parse("application/x-www-form-urlencoded;");
+
+    String post(String url, String json) throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = RequestBody.create(JSON, json);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+        Response response = client.newCall(request).execute();
+        return response.body().string();
+    }
+
+    public void addQuestion(Question q) {
+
+        try {
+            RequestBody formBody = new FormBody.Builder()
+                    .add("title", q.getIntitule())
+                    .add("answer_1", q.getFirstAnswer())
+                    .add("answer_2", q.getSecondAnswer())
+                    .add("answer_3", q.getThirdAnswer())
+                    .add("answer_4", q.getFourthAnswer())
+                    .add("correct_answer", Integer.toString(q.getGoodAnswer()))
+                    .add("author_img_url", AUTHOR_IMG_URL)
+                    .add("author", AUTHOR_NAME)
+                    .build();
+
+            OkHttpClient client = new OkHttpClient.Builder()
+                    .build();
+            Request request = new Request.Builder()
+                    .url(API_URL + ":" + API_PORT + POST_URI)
+                    .post(formBody)
+                    .build();
+
+            Callback loginCallback = new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.e("error", e.getMessage());
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    try {
+                        JSONObject responseObj = new JSONObject(response.body().string());
+                        Log.i("plop", "responseObj: " + responseObj);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+
+            client.newCall(request).enqueue(loginCallback);
+
+        } catch (Exception e){
+            Log.e("error", e.getMessage());
+        }
+    }
+
+    public void getQuestions(final APIResult<List<Question>> listener) {
 
         Request req = new Request.Builder()
                 .url(API_URL + ":" + API_PORT + GET_QUEST_URI)
@@ -50,8 +139,8 @@ public class APIClient {
                 if (response.isSuccessful()) {
                     try {
                         String responseData = response.body().string();
-                        JSONObject answer = new JSONObject(responseData);
-                        JSONArray jArray = answer.getJSONArray(responseData);
+                        //JSONObject answer = new JSONObject(responseData);
+                        JSONArray jArray = new JSONArray(responseData);
 
                         jArray.getJSONObject(0);
 
@@ -61,22 +150,27 @@ public class APIClient {
 
                             JSONObject jsonQuestion = jArray.getJSONObject(i);
 
-                            int id = jsonQuestion.getInt("id");
-                            String intitule = jsonQuestion.getString("title");
-                            String firstAnswer = jsonQuestion.getString("answer_1");
-                            String secondAnswer = jsonQuestion.getString("answer_2");
-                            String thirdAnswer = jsonQuestion.getString("answer_3");
-                            String fourthAnswer = jsonQuestion.getString("answer_4");
-                            int correctAnswer = jsonQuestion.getInt("correct_answer");
-                            String authorImage = jsonQuestion.getString("author_img_url");
-                            String author = jsonQuestion.getString("author");
+                            String IdStr = getValueIfExists(jsonQuestion,"id");
+                            int id = IdStr .equals("") ? 0 : Integer.parseInt(IdStr );
+                            String intitule = getValueIfExists(jsonQuestion,"title");
+                            String firstAnswer = getValueIfExists(jsonQuestion,"answer_1");
+                            String secondAnswer = getValueIfExists(jsonQuestion,"answer_2");
+                            String thirdAnswer = getValueIfExists(jsonQuestion,"answer_3");
+                            String fourthAnswer = getValueIfExists(jsonQuestion,"answer_4");
+                            String correctAnswerStr = getValueIfExists(jsonQuestion,"correct_answer");
+                            int correctAnswer = correctAnswerStr.equals("") ? 0 : Integer.parseInt(correctAnswerStr);
+                            String authorImage = getValueIfExists(jsonQuestion,"author_img_url");
+                            String author = getValueIfExists(jsonQuestion,"author");
 
                             questions.add(new Question(id, intitule, firstAnswer,
                                     secondAnswer, thirdAnswer, fourthAnswer, correctAnswer));
                         }
 
+                        listener.onAPIGetQuestions(questions);
+
                     } catch (JSONException e) {
-                        Log.e("apiclient", e.getMessage());
+                        Log.e("error", e.getMessage());
+                        //listener.onAPIGetQuestions(e);
                     }
                 }
             }
@@ -84,7 +178,7 @@ public class APIClient {
     }
 
     public interface APIResult<T> {
-        void onFailure(IOException e);
-        void onSuccess(T object) throws  IOException;
+        void onAPIGetQuestionsFail(IOException e);
+        void onAPIGetQuestions(T object) throws  IOException;
     }
 }

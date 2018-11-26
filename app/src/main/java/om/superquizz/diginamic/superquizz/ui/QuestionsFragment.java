@@ -13,7 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import java.io.IOException;
+import java.util.List;
+
 import om.superquizz.diginamic.superquizz.R;
+import om.superquizz.diginamic.superquizz.api.APIClient;
 import om.superquizz.diginamic.superquizz.dao.QuestionMemDao;
 import om.superquizz.diginamic.superquizz.database.QuestionDatabase;
 import om.superquizz.diginamic.superquizz.model.Question;
@@ -27,11 +31,9 @@ import om.superquizz.diginamic.superquizz.model.Question;
 
 public class QuestionsFragment extends Fragment {
 
-    QuestionMemDao dao;
-
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener listener;
-
+    private MyQuestionsFragmentRecyclerViewAdapter adapter;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -42,6 +44,9 @@ public class QuestionsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
+
         View view = inflater.inflate(R.layout.fragment_questionsfragment_list, container, false);
 
         // Set the adapter
@@ -53,12 +58,43 @@ public class QuestionsFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-
-            recyclerView.setAdapter(new MyQuestionsFragmentRecyclerViewAdapter(QuestionDatabase.getInstance(getActivity()).getAllQuestions(), listener));
+            adapter = new MyQuestionsFragmentRecyclerViewAdapter(QuestionDatabase.getInstance(getActivity()).getAllQuestions(), listener);
+            recyclerView.setAdapter(adapter);
         }
         return view;
     }
 
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        reloadDataFromServer();
+    }
+
+    private void reloadDataFromServer() {
+        APIClient.getInstance().getQuestions(new APIClient.APIResult<List<Question>>() {
+            @Override
+            public void onAPIGetQuestionsFail(IOException e) {
+
+                //TODO : make toast with error
+
+            }
+
+            @Override
+            public void onAPIGetQuestions(final List<Question> object) throws IOException {
+
+                QuestionDatabase.getInstance(getContext()).synchroniseDatabaseWithServerItems(object);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (adapter != null) {
+                            adapter.updateListWithQuestions(object);
+                        }
+                    }
+                });
+            }
+        });
+    }
 
     @Override
     public void onAttach(Context context) {

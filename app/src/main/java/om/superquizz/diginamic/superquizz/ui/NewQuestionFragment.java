@@ -1,7 +1,11 @@
 package om.superquizz.diginamic.superquizz.ui;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import om.superquizz.diginamic.superquizz.R;
+import om.superquizz.diginamic.superquizz.helper.NetworkChangeReceiver;
 import om.superquizz.diginamic.superquizz.model.Question;
 
 /**
@@ -40,15 +45,7 @@ public class NewQuestionFragment extends Fragment {
     private EditText answer2;
     private EditText answer3;
     private EditText answer4;
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    FloatingActionButton fab;
 
     // private OnFragmentInteractionListener mListener;
 
@@ -67,8 +64,6 @@ public class NewQuestionFragment extends Fragment {
     public static NewQuestionFragment newInstance(String param1, String param2) {
         NewQuestionFragment fragment = new NewQuestionFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -76,10 +71,7 @@ public class NewQuestionFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }*/
+        //registerReceiver();
     }
 
     @Override
@@ -118,42 +110,49 @@ public class NewQuestionFragment extends Fragment {
         answer3 = view.findViewById(R.id.new_question_answer_3);
         answer4 = view.findViewById(R.id.new_question_answer_4);
 
-        FloatingActionButton fab = view.findViewById(R.id.fab);
+        fab = view.findViewById(R.id.fab);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                // getting the good answer number
+                if (NetworkChangeReceiver.isOnline(getActivity())) {
+                    // getting the good answer number
 
-                int i = 0;
-                while (i < 4) {
-                    if (checkboxes[i].isChecked()) {
-                        break;
+                    int i = 0;
+                    while (i < 4) {
+                        if (checkboxes[i].isChecked()) {
+                            break;
+                        }
+                        i++;
                     }
-                    i++;
+
+                    if (answer1.getText().toString().equals("") || answer2.getText().toString().equals("")
+                            || answer3.getText().toString().equals("") || answer4.getText().toString().equals("")) {
+                        Toast.makeText(getActivity(), "Please put 4 propositions.",
+                                Toast.LENGTH_LONG).show();
+                    }
+                    else if (i == 4) {
+                        Toast.makeText(getActivity(), "Please select a good answer.",
+                                Toast.LENGTH_LONG).show();
+                    }
+                    else if (intitule.getText().toString().equals("")) {
+                        Toast.makeText(getActivity(), "Please put a question title.",
+                                Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        Question q = new Question(0, intitule.getText().toString(),
+                                answer1.getText().toString(), answer2.getText().toString(),
+                                answer3.getText().toString(), answer4.getText().toString(), i);
+
+                        mListener.onQuestionCreated(q);
+                    }
                 }
 
-                if (answer1.getText().toString().equals("") || answer2.getText().toString().equals("")
-                        || answer3.getText().toString().equals("") || answer4.getText().toString().equals("")) {
-                    Toast.makeText(getActivity(), "Please put 4 propositions.",
-                            Toast.LENGTH_LONG).show();
-                }
-                else if (i == 4) {
-                    Toast.makeText(getActivity(), "Please select a good answer.",
-                            Toast.LENGTH_LONG).show();
-                }
-                else if (intitule.getText().toString().equals("")) {
-                    Toast.makeText(getActivity(), "Please put a question title.",
-                            Toast.LENGTH_LONG).show();
-                }
                 else {
-                    Question q = new Question(0, intitule.getText().toString(),
-                            answer1.getText().toString(), answer2.getText().toString(),
-                            answer3.getText().toString(), answer4.getText().toString(), i);
-
-                    mListener.onQuestionCreated(q);
+                    Toast.makeText(getActivity(), "No connection.", Toast.LENGTH_LONG).show();
                 }
+
             }
         });
     }
@@ -176,18 +175,59 @@ public class NewQuestionFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnCreateQuestionListener {
-        // TODO: Update argument type and name
         void onQuestionCreated(Question q);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        registerReceiver();
+        //getActivity().registerReceiver(this.internalNetworkChangeReceiver, new IntentFilter(NetworkChangeReceiver.NETWORK_CHANGE_ACTION));
+    }
+
+    private void registerReceiver() {
+        try {
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(NetworkChangeReceiver.NETWORK_CHANGE_ACTION);
+            getActivity().registerReceiver(this.internalNetworkChangeReceiver, intentFilter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onPause() {
+        try {
+            getActivity().unregisterReceiver(internalNetworkChangeReceiver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        super.onPause();
+    }
+
+    InternalNetworkChangeReceiver internalNetworkChangeReceiver = new InternalNetworkChangeReceiver();
+    class InternalNetworkChangeReceiver extends BroadcastReceiver
+    {
+        String connectionStatus = "";
+
+        public void onReceive(Context context, Intent intent) {
+
+            boolean isConnected = intent.getBooleanExtra("status", true);
+
+            if (!isConnected) {
+                if (!connectionStatus.equals("disconnected")) {
+                    Toast.makeText(getActivity(), "Connection to server lost",
+                            Toast.LENGTH_LONG).show();
+                }
+                connectionStatus = "disconnected";
+            }
+            else {
+                if (!connectionStatus.equals("connected")) {
+                    Toast.makeText(getActivity(), "Connection to server came back",
+                            Toast.LENGTH_LONG).show();
+                }
+                connectionStatus = "connected";
+            }
+        }
     }
 }

@@ -11,8 +11,16 @@ import om.superquizz.diginamic.superquizz.model.Question;
 public class QuestionMemDao implements QuestionDao, Parcelable {
 
     private List<Question> questions;
+    static private QuestionMemDao mInstance;
 
-    public QuestionMemDao() {
+    static public QuestionMemDao getInstance() {
+        if (mInstance == null) {
+            mInstance = new QuestionMemDao();
+        }
+        return mInstance;
+    }
+
+    private QuestionMemDao() {
         questions = new ArrayList<>();
     }
 

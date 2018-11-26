@@ -19,7 +19,7 @@ import om.superquizz.diginamic.superquizz.model.Question;
  */
 public class MyQuestionsFragmentRecyclerViewAdapter extends RecyclerView.Adapter<MyQuestionsFragmentRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Question> mValues;
+    private  List<Question> mValues;
     private final OnListFragmentInteractionListener mListener;
 
     public MyQuestionsFragmentRecyclerViewAdapter(List<Question> items, OnListFragmentInteractionListener listener) {
@@ -32,6 +32,11 @@ public class MyQuestionsFragmentRecyclerViewAdapter extends RecyclerView.Adapter
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_questionsfragment, parent, false);
         return new ViewHolder(view);
+    }
+
+    public void updateListWithQuestions(List<Question> newValues) {
+        mValues = newValues;
+        notifyDataSetChanged();
     }
 
     @Override

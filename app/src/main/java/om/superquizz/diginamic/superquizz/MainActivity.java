@@ -2,6 +2,7 @@ package om.superquizz.diginamic.superquizz;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -23,14 +24,13 @@ import om.superquizz.diginamic.superquizz.api.APIClient;
 import om.superquizz.diginamic.superquizz.dao.QuestionMemDao;
 import om.superquizz.diginamic.superquizz.database.QuestionDatabase;
 import om.superquizz.diginamic.superquizz.model.Question;
-import om.superquizz.diginamic.superquizz.services.UpdateQuestionsIntentService;
 import om.superquizz.diginamic.superquizz.ui.NewQuestionFragment;
 import om.superquizz.diginamic.superquizz.ui.QuestionsFragment;
 import om.superquizz.diginamic.superquizz.ui.ScoreFragment;
 import om.superquizz.diginamic.superquizz.ui.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, QuestionsFragment.OnListFragmentInteractionListener, NewQuestionFragment.OnCreateQuestionListener, APIClient.APIResult<List<Question>>
+        implements NavigationView.OnNavigationItemSelectedListener, QuestionsFragment.OnListFragmentInteractionListener, NewQuestionFragment.OnCreateQuestionListener
  {
      QuestionMemDao dao;
      Question onLongClickItem;
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity
 
      public void onQuestionCreated(Question q) {
          QuestionDatabase.getInstance(this).addQuestion(q);
-         dao.save(q);
+         APIClient.getInstance().addQuestion(q);
      }
 
     public void onListQuestionClick(Question item) {
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity
 
          List<Question> questions = QuestionDatabase.getInstance(this).getAllQuestions();
 
-         dao = new QuestionMemDao();
+         dao = QuestionMemDao.getInstance();
 
          for (Question quest : questions) {
              dao.save(quest);
@@ -115,23 +115,7 @@ public class MainActivity extends AppCompatActivity
 
         startQuestion(fragmentTransaction);
 
-        APIClient cl = APIClient.getInstance();
-        cl.getQuestions(this);
-
-        Intent uqServiceIntent = new Intent(this, UpdateQuestionsIntentService.class);
-        startService(uqServiceIntent);
-
     }
-
-     @Override
-     public void onFailure(IOException e) {
-
-     }
-
-     @Override
-     public void onSuccess(List<Question> object) throws IOException {
-
-     }
 
     @Override
     public void onBackPressed() {
@@ -168,11 +152,6 @@ public class MainActivity extends AppCompatActivity
     private void startQuestion(FragmentTransaction fragmentTransaction) {
 
         QuestionsFragment fragment = new QuestionsFragment();
-
-        // todo delete ?
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("dao", dao);
-        fragment.setArguments(bundle);
 
         fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.addToBackStack(null);
