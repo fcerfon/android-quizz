@@ -60,37 +60,4 @@ public class SettingsFragment extends Fragment {
 
         return v;
     }
-
-    /*
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        View v = inflater.inflate(R.layout.fragment_settings, container, false);
-/*
-        Switch sw = v.findViewById(R.id.save_answer);
-
-        mSettings = getActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE);
-
-        boolean actualValue = mSettings.getBoolean("save_answer", true);
-        if (actualValue) {
-            sw.setChecked(actualValue);
-        }
-
-        sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                try {
-                    SharedPreferences mSettings = getActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = mSettings.edit();
-                    editor.putBoolean("save_answer", isChecked);
-                } catch (Exception e) {
-                    Log.e("settings", e.getMessage());
-                }
-            }
-        });
-*/
-       /* return v;
-    }*/
 }
