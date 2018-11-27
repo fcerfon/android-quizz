@@ -1,11 +1,17 @@
 <resources>
-    <string name="app_name">SuperQuizz</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+
+    <string name="good_answer_piechart">Bonnes réponses</string>
+    <string name="bad_answer_piechart">Mauvaises réponses</string>
+    <string name="unanswered_question_piechart">Questions non répondues</string>
+    <string name="score_piechart">Score</string>
+
+    <string name="save_questions_settings">Sauvegarder les réponses ?</string>
 
     <string name="good_answer">Congrats ! You got the right answer !</string>
     <string name="question_france_capital">Quelle est la capitale de la France ?</string>

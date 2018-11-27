@@ -10,6 +10,8 @@ public class Question implements Parcelable {
     private String intitule;
     private String[] propositions;
     private int goodAnswer;
+    private boolean isAnswered;
+    private boolean isSucceeded;
 //    private TypeQuestion type;
 
     public Question(int id, String question, String firstAnswer, String secondAnswer,
@@ -31,6 +33,8 @@ public class Question implements Parcelable {
         intitule = in.readString();
         propositions = in.createStringArray();
         goodAnswer = in.readInt();
+        isAnswered = in.readByte() != 0;
+        isSucceeded = in.readByte() != 0;
     }
 
     // Getters and setters
@@ -52,14 +56,10 @@ public class Question implements Parcelable {
         this.goodAnswer = indexQuestion;
     }
     public int getId() {return id;}
-
-    /*public TypeQuestion getType() {
-        return type;
-    }*/
-
-    /*public void setType(TypeQuestion type) {
-        this.type = type;
-    }*/
+    public boolean getIsAnswered() {return isAnswered;}
+    public boolean setIsAnswered(boolean isAnswered) {return this.isAnswered = isAnswered;}
+    public boolean getIsSucceeded() {return isSucceeded;}
+    public boolean setIsSucceeded(boolean isSucceeded) {return this.isSucceeded = isSucceeded;}
 
     // Parcelable implementation
 
@@ -74,6 +74,8 @@ public class Question implements Parcelable {
         dest.writeString(intitule);
         dest.writeStringArray(propositions);
         dest.writeInt(goodAnswer);
+        dest.writeByte((byte) (isAnswered ? 1 : 0));
+        dest.writeByte((byte) (isSucceeded ? 1 : 0));
     }
 
     public static final Creator<Question> CREATOR = new Creator<Question>() {

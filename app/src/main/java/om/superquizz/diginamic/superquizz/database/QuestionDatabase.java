@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Parcel;
@@ -19,6 +20,8 @@ import java.util.List;
 import om.superquizz.diginamic.superquizz.api.APIClient;
 import om.superquizz.diginamic.superquizz.model.Question;
 
+import static om.superquizz.diginamic.superquizz.helper.Utils.boolToInt;
+
 public class QuestionDatabase extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "questionDatabse";
@@ -33,8 +36,12 @@ public class QuestionDatabase extends SQLiteOpenHelper {
     private static final String KEY_QUESTION_THIRD_ANSWER = "third_answer";
     private static final String KEY_QUESTION_FOURTH_ANSWER = "fourth_answer";
     private static final String KEY_QUESTION_GOOD_ANSWER = "good_answer";
+    private static final String KEY_QUESTION_ANSWERED = "question_answered";
+    private static final String KEY_QUESTION_SUCCESS = "succeeded";
 
     private static final String DROP_TABLE_QUERY = "DROP TABLE IF EXISTS ";
+
+    private static final int VERSION_NUMBER = 2;
 
     // update variables
     static private QuestionDatabase dbInstance;
@@ -43,18 +50,9 @@ public class QuestionDatabase extends SQLiteOpenHelper {
     // Singleton Pattern functions
 
     private QuestionDatabase(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, DATABASE_NAME, null, VERSION_NUMBER);
     }
 
-    private void sendRequest() {
-
-    }
-
-    public void updateQuestion() {
-
-    }
-
-    // todo : comprendre le context (domaine de l'application, genre une interface)
     public static synchronized QuestionDatabase getInstance(Context context) {
         if (dbInstance == null) {
             dbInstance = new QuestionDatabase(context.getApplicationContext());
@@ -91,10 +89,77 @@ public class QuestionDatabase extends SQLiteOpenHelper {
                     KEY_QUESTION_SECOND_ANSWER + " NOT NULL," +
                     KEY_QUESTION_THIRD_ANSWER + "," +
                     KEY_QUESTION_FOURTH_ANSWER + "," +
-                    KEY_QUESTION_GOOD_ANSWER + " INTEGER NOT NULL" +
+                    KEY_QUESTION_GOOD_ANSWER + " INTEGER NOT NULL," +
+                    KEY_QUESTION_ANSWERED + " INTEGER DEFAULT 0," +
+                    KEY_QUESTION_SUCCESS + " INTEGER" +
                 ")";
 
         db.execSQL(CREATE_QUESTION_TABLE);
+    }
+
+    public long getAnsweredQuestionNumber() {
+        try {
+            String countQuery = "SELECT * FROM " + QUESTION_TABLE +
+                    " WHERE " + KEY_QUESTION_ANSWERED + " = 1";
+
+            SQLiteDatabase db = getReadableDatabase();
+            Cursor cursor = db.rawQuery(countQuery, null);
+            int count = cursor.getCount();
+            cursor.close();
+            return count;
+        } catch (Exception e) {
+            Log.e("DATABASE_ERROR", e.getMessage());
+        }
+        return 0;
+    }
+
+    public long getSuccessfulQuestionsNumber() {
+        try {
+            String countQuery = "SELECT * FROM " + QUESTION_TABLE +
+                    " WHERE " + KEY_QUESTION_SUCCESS + " = 1";
+
+            SQLiteDatabase db = getReadableDatabase();
+            Cursor cursor = db.rawQuery(countQuery, null);
+            int count = cursor.getCount();
+            cursor.close();
+            return count;
+        } catch (Exception e) {
+            Log.e("DATABASE_ERROR", e.getMessage());
+        }
+        return 0;
+    }
+
+    public void editQuestion(Question q) {
+
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+
+        // start update process
+        try {
+            ContentValues values = new ContentValues();
+            values.put(KEY_QUESTION_TITLE, q.getIntitule());
+            values.put(KEY_QUESTION_FIRST_ANSWER, q.getFirstAnswer());
+            values.put(KEY_QUESTION_GOOD_ANSWER, q.getGoodAnswer());
+            values.put(KEY_QUESTION_SECOND_ANSWER, q.getSecondAnswer());
+            if (!q.getThirdAnswer().equals("")) {
+                values.put(KEY_QUESTION_THIRD_ANSWER, q.getThirdAnswer());
+            }
+            if (!q.getFourthAnswer().equals("")) {
+                values.put(KEY_QUESTION_FOURTH_ANSWER, q.getFourthAnswer());
+            }
+            if (q.getIsAnswered()) {
+                values.put(KEY_QUESTION_ANSWERED, q.getIsAnswered());
+                values.put(KEY_QUESTION_SUCCESS, q.getIsSucceeded());
+            }
+
+            db.update(QUESTION_TABLE, values, "id = " + q.getId(), null);
+            db.setTransactionSuccessful();
+
+        } catch (Exception e) {
+            Log.e("DATABASE_ERROR", e.getMessage());
+        } finally {
+            db.endTransaction();
+        }
     }
 
     public void deleteQuestion(Question q) {
@@ -167,7 +232,6 @@ public class QuestionDatabase extends SQLiteOpenHelper {
         return questionId;
     }
 
-
     private Question getQuestionById(List<Question> questions, int id) {
         for (Question q : questions) {
             if (q.getId() == id) {
@@ -197,7 +261,6 @@ public class QuestionDatabase extends SQLiteOpenHelper {
     void deleteQuestionInDb(Question q) {
         dbInstance.deleteQuestion(q);
     }
-
 
     public void synchroniseDatabaseWithServerItems(List<Question> serverQuestions) throws IOException {
         localQuestions = dbInstance.getAllQuestions();

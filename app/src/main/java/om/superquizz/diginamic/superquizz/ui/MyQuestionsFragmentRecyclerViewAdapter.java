@@ -1,7 +1,6 @@
 package om.superquizz.diginamic.superquizz.ui;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +18,11 @@ import om.superquizz.diginamic.superquizz.model.Question;
  */
 public class MyQuestionsFragmentRecyclerViewAdapter extends RecyclerView.Adapter<MyQuestionsFragmentRecyclerViewAdapter.ViewHolder> {
 
-    private  List<Question> mValues;
+    private  List<Question> questions;
     private final OnListFragmentInteractionListener mListener;
 
     public MyQuestionsFragmentRecyclerViewAdapter(List<Question> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
+        questions = items;
         mListener = listener;
     }
 
@@ -35,15 +34,18 @@ public class MyQuestionsFragmentRecyclerViewAdapter extends RecyclerView.Adapter
     }
 
     public void updateListWithQuestions(List<Question> newValues) {
-        mValues = newValues;
+        questions = newValues;
         notifyDataSetChanged();
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(String.valueOf(mValues.get(position).getId()));
-        holder.mContentView.setText(mValues.get(position).getIntitule());
+        holder.mItem = questions.get(position);
+        holder.mIdView.setText(String.valueOf(questions.get(position).getId()));
+
+        String questionEntitled = holder.mItem.getIntitule();
+
+        holder.mContentView.setText(questionEntitled);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,16 +71,16 @@ public class MyQuestionsFragmentRecyclerViewAdapter extends RecyclerView.Adapter
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return questions.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public Question mItem;
+        final View mView;
+        final TextView mIdView;
+        final TextView mContentView;
+        Question mItem;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.item_number);

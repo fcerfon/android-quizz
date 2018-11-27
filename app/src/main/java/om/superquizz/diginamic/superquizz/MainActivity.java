@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity
 
          builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
          builder.setTitle("Supprimer ou éditer la question")
-                 .setPositiveButton("Supprimer", new DialogInterface.OnClickListener() {
+                 .setNegativeButton("Supprimer", new DialogInterface.OnClickListener() {
                      @Override
                      public void onClick(DialogInterface dialog, int which) {
                          dao.delete(onLongClickItem);

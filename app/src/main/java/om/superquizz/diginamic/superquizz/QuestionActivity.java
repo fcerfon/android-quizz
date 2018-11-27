@@ -27,10 +27,12 @@ public class QuestionActivity extends AppCompatActivity implements DelayTask.pro
     private Button goodAnswer;
     private Button[] falseAnswers;
     private ProgressBar pb;
+    private Question q;
+    private Boolean questionAnswered;
 
     private void initialize() {
 
-        Question q = getIntent().getParcelableExtra("question");
+        q = getIntent().getParcelableExtra("question");
         ((TextView)findViewById(R.id.intitule)).setText(q.getIntitule());
 
         String[] propositions = q.getPropositions();
@@ -79,7 +81,9 @@ public class QuestionActivity extends AppCompatActivity implements DelayTask.pro
         goodAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                questionAnswered = true;
                 Intent intent = new Intent(QuestionActivity.this, SuccessActivity.class);
+                intent.putExtra("Question", q);
                 startActivity(intent);
             }
         });
@@ -88,7 +92,9 @@ public class QuestionActivity extends AppCompatActivity implements DelayTask.pro
             badAnswer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    questionAnswered = true;
                     Intent intent = new Intent(QuestionActivity.this, FailureActivity.class);
+                    intent.putExtra("Question", q);
                     startActivity(intent);
                 }
             });
@@ -111,7 +117,10 @@ public class QuestionActivity extends AppCompatActivity implements DelayTask.pro
 
     @Override
     public void onTaskCompleted() {
-        Intent intent = new Intent(this, FailureActivity.class);
-        startActivity(intent);
+        if (!questionAnswered) {
+            Intent intent = new Intent(this, FailureActivity.class);
+            intent.putExtra("Question", q);
+            startActivity(intent);
+        }
     }
 }

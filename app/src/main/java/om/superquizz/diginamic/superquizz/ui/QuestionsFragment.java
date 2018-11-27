@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.List;
@@ -76,7 +77,8 @@ public class QuestionsFragment extends Fragment {
             @Override
             public void onAPIGetQuestionsFail(IOException e) {
 
-                //TODO : make toast with error
+                Toast.makeText(getActivity(), "Cannot get questions.",
+                        Toast.LENGTH_LONG).show();
 
             }
 
