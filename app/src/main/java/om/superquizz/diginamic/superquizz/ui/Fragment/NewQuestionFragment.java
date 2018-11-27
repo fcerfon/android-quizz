@@ -1,20 +1,14 @@
-package om.superquizz.diginamic.superquizz.ui;
+package om.superquizz.diginamic.superquizz.ui.Fragment;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,14 +22,7 @@ import om.superquizz.diginamic.superquizz.R;
 import om.superquizz.diginamic.superquizz.helper.NetworkChangeReceiver;
 import om.superquizz.diginamic.superquizz.model.Question;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link NewQuestionFragment.OnCreateQuestionListener} interface
- * to handle interaction events.
- * Use the {@link NewQuestionFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class NewQuestionFragment extends Fragment {
 
     private NewQuestionFragment.OnCreateQuestionListener mListener;
@@ -47,32 +34,6 @@ public class NewQuestionFragment extends Fragment {
     private EditText answer4;
     FloatingActionButton fab;
 
-    // private OnFragmentInteractionListener mListener;
-
-    public NewQuestionFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment NewQuestionFragment.
-     */
-    public static NewQuestionFragment newInstance(String param1, String param2) {
-        NewQuestionFragment fragment = new NewQuestionFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //registerReceiver();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -183,7 +144,6 @@ public class NewQuestionFragment extends Fragment {
     public void onResume() {
         super.onResume();
         registerReceiver();
-        //getActivity().registerReceiver(this.internalNetworkChangeReceiver, new IntentFilter(NetworkChangeReceiver.NETWORK_CHANGE_ACTION));
     }
 
     private void registerReceiver() {

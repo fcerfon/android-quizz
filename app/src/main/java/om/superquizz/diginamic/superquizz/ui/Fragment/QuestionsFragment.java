@@ -1,9 +1,7 @@
-package om.superquizz.diginamic.superquizz.ui;
+package om.superquizz.diginamic.superquizz.ui.Fragment;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -19,7 +16,6 @@ import java.util.List;
 
 import om.superquizz.diginamic.superquizz.R;
 import om.superquizz.diginamic.superquizz.api.APIClient;
-import om.superquizz.diginamic.superquizz.dao.QuestionMemDao;
 import om.superquizz.diginamic.superquizz.database.QuestionDatabase;
 import om.superquizz.diginamic.superquizz.model.Question;
 
@@ -75,7 +71,7 @@ public class QuestionsFragment extends Fragment {
     private void reloadDataFromServer() {
         APIClient.getInstance().getQuestions(new APIClient.APIResult<List<Question>>() {
             @Override
-            public void onAPIGetQuestionsFail(IOException e) {
+            public void onAPIGetQuestionsFail(Exception e) {
 
                 Toast.makeText(getActivity(), "Cannot get questions.",
                         Toast.LENGTH_LONG).show();

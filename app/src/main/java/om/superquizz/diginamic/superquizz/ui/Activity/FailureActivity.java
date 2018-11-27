@@ -1,8 +1,9 @@
-package om.superquizz.diginamic.superquizz;
+package om.superquizz.diginamic.superquizz.ui.Activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import om.superquizz.diginamic.superquizz.R;
 import om.superquizz.diginamic.superquizz.database.QuestionDatabase;
 import om.superquizz.diginamic.superquizz.model.Question;
 

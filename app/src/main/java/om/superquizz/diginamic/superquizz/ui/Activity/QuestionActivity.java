@@ -1,24 +1,16 @@
-package om.superquizz.diginamic.superquizz;
+package om.superquizz.diginamic.superquizz.ui.Activity;
 
-import android.os.AsyncTask;
-import android.os.SystemClock;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 
 import android.content.Intent;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import om.superquizz.diginamic.superquizz.R;
 import om.superquizz.diginamic.superquizz.helper.DelayTask;
 import om.superquizz.diginamic.superquizz.model.Question;
 
@@ -36,37 +28,44 @@ public class QuestionActivity extends AppCompatActivity implements DelayTask.pro
         ((TextView)findViewById(R.id.intitule)).setText(q.getIntitule());
 
         String[] propositions = q.getPropositions();
-        ((Button)findViewById(R.id.answer1)).setText(propositions[0]);
-        ((Button)findViewById(R.id.answer2)).setText(propositions[1]);
-        ((Button)findViewById(R.id.answer3)).setText(propositions[2]);
-        ((Button)findViewById(R.id.answer4)).setText(propositions[3]);
+
+        Button button1 = findViewById(R.id.answer1);
+        Button button2 = findViewById(R.id.answer2);
+        Button button3 = findViewById(R.id.answer3);
+        Button button4 = findViewById(R.id.answer4);
+
+        button1.setText(propositions[0]);
+        button2.setText(propositions[1]);
+        button3.setText(propositions[2]);
+        button4.setText(propositions[3]);
 
         falseAnswers = new Button[3];
 
-        // todo factoriser
-        if (q.getGoodAnswer() == 0) {
-            goodAnswer = findViewById(R.id.answer1);
-            falseAnswers[0] = findViewById(R.id.answer2);
-            falseAnswers[1] = findViewById(R.id.answer3);
-            falseAnswers[2] = findViewById(R.id.answer4);
-        }
-        if (q.getGoodAnswer() == 1) {
-            goodAnswer = findViewById(R.id.answer2);
-            falseAnswers[0] = findViewById(R.id.answer1);
-            falseAnswers[1] = findViewById(R.id.answer3);
-            falseAnswers[2] = findViewById(R.id.answer4);
-        }
-        if (q.getGoodAnswer() == 2) {
-            goodAnswer = findViewById(R.id.answer3);
-            falseAnswers[0] = findViewById(R.id.answer1);
-            falseAnswers[1] = findViewById(R.id.answer2);
-            falseAnswers[2] = findViewById(R.id.answer4);
-        }
-        if (q.getGoodAnswer() == 3) {
-            goodAnswer = findViewById(R.id.answer4);
-            falseAnswers[0] = findViewById(R.id.answer1);
-            falseAnswers[1] = findViewById(R.id.answer2);
-            falseAnswers[2] = findViewById(R.id.answer3);
+        switch (q.getGoodAnswer()) {
+            case 0:
+                goodAnswer = button1;
+                falseAnswers[0] = button2;
+                falseAnswers[1] = button3;
+                falseAnswers[2] = button4;
+                break;
+            case 1:
+                goodAnswer = button2;
+                falseAnswers[0] = button1;
+                falseAnswers[1] = button3;
+                falseAnswers[2] = button4;
+                break;
+            case 2:
+                goodAnswer = button3;
+                falseAnswers[0] = button1;
+                falseAnswers[1] = button2;
+                falseAnswers[2] = button4;
+                break;
+            case 3:
+                goodAnswer = button4;
+                falseAnswers[0] = button1;
+                falseAnswers[1] = button2;
+                falseAnswers[2] = button3;
+                break;
         }
     }
 

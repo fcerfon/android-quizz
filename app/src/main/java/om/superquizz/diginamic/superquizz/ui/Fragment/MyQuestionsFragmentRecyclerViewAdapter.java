@@ -1,4 +1,4 @@
-package om.superquizz.diginamic.superquizz.ui;
+package om.superquizz.diginamic.superquizz.ui.Fragment;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import om.superquizz.diginamic.superquizz.ui.QuestionsFragment.OnListFragmentInteractionListener;
+import om.superquizz.diginamic.superquizz.ui.Fragment.QuestionsFragment.OnListFragmentInteractionListener;
 import om.superquizz.diginamic.superquizz.R;
 
 import java.util.List;

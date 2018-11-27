@@ -1,77 +1,13 @@
-/*package om.superquizz.diginamic.superquizz.ui;
-
-import android.content.Context;
-import android.net.Uri;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import om.superquizz.diginamic.superquizz.R;
-import om.superquizz.diginamic.superquizz.database.QuestionDatabase;
-
-public class ScoreFragment extends Fragment {
-    private static final String SCORE = "score";
-    private static final String MAX_SCORE = "maxScore";
-
-    private String score;
-    private String maxScore;
-
-    public ScoreFragment() {
-        // Required empty public constructor
-    }
-
-    public static ScoreFragment newInstance(int param1, int param2) {
-        ScoreFragment fragment = new ScoreFragment();
-        Bundle args = new Bundle();
-
-        args.putInt(SCORE, param1);
-        args.putInt(MAX_SCORE, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        long goodAnswer = QuestionDatabase.getInstance(getContext()).getSuccessfulQuestionsNumber();
-        long answered = QuestionDatabase.getInstance(getContext()).getAnsweredQuestionNumber();
-
-//        Log.e("score", "answered = " + answered);
-//        Log.e("score", "goodAnswer = " + goodAnswer);
-
-
-
-        if (getArguments() != null) {
-            score = getArguments().getString(score);
-            maxScore = getArguments().getString(maxScore);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_score, container, false);
-    }
-}
-*/
-
-package  om.superquizz.diginamic.superquizz.ui;
+package om.superquizz.diginamic.superquizz.ui.Fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
@@ -129,7 +65,6 @@ public class ScoreFragment extends Fragment {
         l.setYEntrySpace(0f);
         l.setYOffset(0f);
 
-        // entry label styling
         chart.setEntryLabelColor(Color.BLACK);
         chart.setEntryLabelTextSize(12f);
 
@@ -145,11 +80,6 @@ public class ScoreFragment extends Fragment {
         long allQuestionCount = QuestionDatabase.getInstance(getContext()).getAllQuestions().size();
         long wronglyAnsweredQuestionsNumber = answeredQuestionsNumber - successfullyAnsweredQuestionsNumber;
         long unansweredQuestions = allQuestionCount - wronglyAnsweredQuestionsNumber - successfullyAnsweredQuestionsNumber;
-
-        Log.e("score", "answered : " + answeredQuestionsNumber);
-        Log.e("score", "success : " + successfullyAnsweredQuestionsNumber);
-        Log.e("score", "wrong : " + wronglyAnsweredQuestionsNumber);
-        Log.e("score", "total : " + unansweredQuestions);
 
         ArrayList<PieEntry> questionEntries = new ArrayList<>();
 
@@ -177,9 +107,7 @@ public class ScoreFragment extends Fragment {
         data.setValueTextColor(Color.BLACK);
         chart.setData(data);
 
-        // undo all highlights
         chart.highlightValues(null);
-
         chart.invalidate();
     }
 

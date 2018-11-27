@@ -7,7 +7,7 @@
     android:layout_margin="16sp"
 
     android:orientation="vertical"
-    tools:context=".ui.NewQuestionFragment">
+    tools:context=".ui.Fragment.NewQuestionFragment">
 
     <EditText
         android:id="@+id/question_name"

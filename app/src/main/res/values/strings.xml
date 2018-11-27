@@ -12,6 +12,9 @@
     <string name="score_piechart">Score</string>
 
     <string name="save_questions_settings">Sauvegarder les réponses ?</string>
+    <string name="delete_or_edit_popup">Supprimer ou éditer la question</string>
+    <string name="edit">Editer</string>
+    <string name="delete">Supprimer</string>
 
     <string name="good_answer">Congrats ! You got the right answer !</string>
     <string name="question_france_capital">Quelle est la capitale de la France ?</string>

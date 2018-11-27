@@ -2,25 +2,16 @@ package om.superquizz.diginamic.superquizz.database;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.SystemClock;
 import android.util.Log;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import om.superquizz.diginamic.superquizz.api.APIClient;
 import om.superquizz.diginamic.superquizz.model.Question;
-
-import static om.superquizz.diginamic.superquizz.helper.Utils.boolToInt;
 
 public class QuestionDatabase extends SQLiteOpenHelper {
 

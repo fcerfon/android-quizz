@@ -7,17 +7,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
-import okhttp3.HttpUrl;
-import okhttp3.Interceptor;
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -34,7 +30,8 @@ public class APIClient {
     static final String API_PORT = "3000";
     static final String GET_QUEST_URI = "/questions";
     static final String POST_URI = "/questions";
-    OkHttpClient client = new OkHttpClient();
+
+    private final OkHttpClient client = new OkHttpClient();
 
     // POST values
 
@@ -64,7 +61,6 @@ public class APIClient {
         return "";
     }
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    public static final MediaType URLENCODED = MediaType.parse("application/x-www-form-urlencoded;");
 
     String post(String url, String json) throws IOException {
         OkHttpClient client = new OkHttpClient();
@@ -132,6 +128,7 @@ public class APIClient {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.e("failure", e.getMessage());
+                listener.onAPIGetQuestionsFail(e);
             }
 
             @Override
@@ -170,7 +167,7 @@ public class APIClient {
 
                     } catch (JSONException e) {
                         Log.e("error", e.getMessage());
-                        //listener.onAPIGetQuestions(e);
+                        listener.onAPIGetQuestionsFail(e);
                     }
                 }
             }
@@ -178,7 +175,7 @@ public class APIClient {
     }
 
     public interface APIResult<T> {
-        void onAPIGetQuestionsFail(IOException e);
+        void onAPIGetQuestionsFail(Exception e);
         void onAPIGetQuestions(T object) throws  IOException;
     }
 }

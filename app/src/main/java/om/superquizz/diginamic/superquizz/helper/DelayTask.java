@@ -3,7 +3,7 @@ package om.superquizz.diginamic.superquizz.helper;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 
-import om.superquizz.diginamic.superquizz.QuestionActivity;
+import om.superquizz.diginamic.superquizz.ui.Activity.QuestionActivity;
 
 public class DelayTask extends AsyncTask<Void, Integer, String> {
     private final progressCallbackInterface listener;

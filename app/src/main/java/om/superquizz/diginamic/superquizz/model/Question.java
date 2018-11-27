@@ -3,8 +3,6 @@ package om.superquizz.diginamic.superquizz.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.List;
-
 public class Question implements Parcelable {
     private int id;
     private String intitule;

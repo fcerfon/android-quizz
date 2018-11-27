@@ -1,8 +1,7 @@
-package om.superquizz.diginamic.superquizz;
+package om.superquizz.diginamic.superquizz.ui.Activity;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -17,22 +16,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
 
-import java.io.IOException;
-import java.util.List;
-
+import om.superquizz.diginamic.superquizz.R;
 import om.superquizz.diginamic.superquizz.api.APIClient;
-import om.superquizz.diginamic.superquizz.dao.QuestionMemDao;
 import om.superquizz.diginamic.superquizz.database.QuestionDatabase;
 import om.superquizz.diginamic.superquizz.model.Question;
-import om.superquizz.diginamic.superquizz.ui.NewQuestionFragment;
-import om.superquizz.diginamic.superquizz.ui.QuestionsFragment;
-import om.superquizz.diginamic.superquizz.ui.ScoreFragment;
-import om.superquizz.diginamic.superquizz.ui.SettingsFragment;
+import om.superquizz.diginamic.superquizz.ui.Fragment.NewQuestionFragment;
+import om.superquizz.diginamic.superquizz.ui.Fragment.QuestionsFragment;
+import om.superquizz.diginamic.superquizz.ui.Fragment.ScoreFragment;
+import om.superquizz.diginamic.superquizz.ui.Fragment.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, QuestionsFragment.OnListFragmentInteractionListener, NewQuestionFragment.OnCreateQuestionListener
  {
-     QuestionMemDao dao;
      Question onLongClickItem;
      final Context context = this;
 
@@ -55,18 +50,17 @@ public class MainActivity extends AppCompatActivity
          AlertDialog.Builder builder;
 
          builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-         builder.setTitle("Supprimer ou éditer la question")
-                 .setNegativeButton("Supprimer", new DialogInterface.OnClickListener() {
+         builder.setTitle(getResources().getString(R.string.delete_or_edit_popup))
+                 .setNegativeButton(getResources().getString(R.string.delete), new DialogInterface.OnClickListener() {
                      @Override
                      public void onClick(DialogInterface dialog, int which) {
-                         dao.delete(onLongClickItem);
                          QuestionDatabase.getInstance(context).deleteQuestion(onLongClickItem);
                          FragmentManager fragmentManager = getSupportFragmentManager();
                          FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                          startQuestion(fragmentTransaction);
                      }
                  })
-                 .setPositiveButton("Editer", new DialogInterface.OnClickListener() {
+                 .setPositiveButton(getResources().getString(R.string.edit), new DialogInterface.OnClickListener() {
                      @Override
                      public void onClick(DialogInterface dialog, int which) {
                          FragmentManager fragmentManager = getSupportFragmentManager();
@@ -80,14 +74,6 @@ public class MainActivity extends AppCompatActivity
 
      private void initializeListQuestions() {
         // Initialisation des questions par défaut
-
-         List<Question> questions = QuestionDatabase.getInstance(this).getAllQuestions();
-
-         dao = QuestionMemDao.getInstance();
-
-         for (Question quest : questions) {
-             dao.save(quest);
-         }
      }
 
     @Override
